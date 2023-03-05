@@ -2,15 +2,37 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import HomeHeader from './HomeHeader';
 import Specialty from './Section/Specialty';
+import MedicalFacility from './Section/MedicalFacilities'
+import OutStandingDoctor from './Section/OutStandingDoctor';
+import HandBook from './Section/HandBook';
+import About from './Section/About';
+import HomeFooter from './HomeFooter';
+import './HomePage.scss'
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 class HomePage extends Component {
 
     render() {
+        let settings = {
+            dots: false,
+            infinite: true,
+            speed: 500,
+            // hiển thị 4 ảnh
+            slidesToShow: 4,
+            // next mỗi lần 1 ảnh
+            slidesToScrool:1,
+        };
         
         return (
             <div>
                 <HomeHeader />
-                <Specialty />
+                <Specialty settings={settings}/>
+                <MedicalFacility settings={settings}/>
+                <OutStandingDoctor settings={settings}/>
+                <HandBook settings={settings}/>
+                <About />
+                <HomeFooter />
             </div>
         );
     }
