@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './HomeHeader.scss'
+import logo from '../../assets/logo-bookingcare.svg';
+import { FormattedMessage } from 'react-intl'
+import { LANGUAGES } from '../../utils'
+import { changeLanguageApp } from '../../store/actions';
 
 class HomeHeader extends Component {
-
+    changeLanguage = (language) => {
+        this.props.changeLanguageAppRedux(language)
+        // fire redux event : action
+    }
     render() {
+        let language = this.props.language;
         
         return (
             <React.Fragment>
@@ -12,12 +20,14 @@ class HomeHeader extends Component {
                     <div className='home-header-content'>
                         <div className='left-content'>
                             <i className='fas fa-bars'></i>
-                            <div className='header-logo'></div>
+                            <img className='header-logo' src={logo} alt='logo' />
                         </div>
                         <div className='center-content'>
                             <div className='cild-content'>
-                                <div><b>Chuyên khoa</b></div>
-                                <div className='subs-title'>Tìm bác sĩ chuyên khoa</div>
+                                {/* <div><b>Chuyên khoa</b></div>
+                                <div className='subs-title'>Tìm bác sĩ theo chuyên khoa</div> */}
+                                <div><b><FormattedMessage id="homeheader.speciality" /></b></div>
+                                <div className='subs-title'><FormattedMessage id="homeheader.searchdoctor" /></div>
                             </div>
                             <div className='cild-content'>
                                 <div><b>Cơ sơ y tế</b></div>
@@ -34,7 +44,8 @@ class HomeHeader extends Component {
                         </div>
                         <div className='right-content'>
                             <div className='support'><i className='fas fa-question-circle'></i> Hỗ trợ</div>
-                            <div className='flag'>VN</div>
+                            <div className={language === LANGUAGES.VI ? 'language-vi active' : 'language-vi'}><span onClick={() => this.changeLanguage(LANGUAGES.VI)}>VN</span></div>
+                            <div className={language === LANGUAGES.EN ? 'language-en active' : 'language-en'}><span onClick={() => this.changeLanguage(LANGUAGES.EN)}>EN</span></div>
                         </div>
                     </div>
                 </div>
@@ -62,7 +73,7 @@ class HomeHeader extends Component {
                                 <div className='text-child'>Khám tổng quát</div>
                             </div>
                             <div className='option-child'>
-                                <div className='icon-child'><i className='fas fa-microscope'></i></div>
+                                <div className='icon-child'><i className='fas fa-flask'></i></div>
                                 <div className='text-child'>Xét nghiệm y học</div>
                             </div>
                             <div className='option-child'>
@@ -84,12 +95,14 @@ class HomeHeader extends Component {
 
 const mapStateToProps = state => {
     return {
-        isLoggedIn: state.user.isLoggedIn
+        isLoggedIn: state.user.isLoggedIn,
+        language: state.app.language,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        changeLanguageAppRedux: (language) => dispatch(changeLanguageApp(language))
     };
 };
 

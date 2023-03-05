@@ -1,4 +1,8 @@
 {
+    "homeheader": {
+        "speciality": "Chuyên khoa",
+        "searchdoctor": "Tìm bác sĩ theo chuyên khoa"
+    },
     "common": {
         "add": "Thêm",
         "edit": "Sửa",
