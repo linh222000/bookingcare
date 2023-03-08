@@ -16,7 +16,7 @@ class HomePage extends Component {
     render() {
         let settings = {
             dots: false,
-            infinite: true,
+            infinite: false,
             speed: 500,
             // hiển thị 4 ảnh
             slidesToShow: 4,
