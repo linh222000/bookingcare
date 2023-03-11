@@ -6,25 +6,6 @@ import { getAllCodeService,
         getAllDoctors, saveDetailDoctorService } from '../../../services/userService';
 import { toast } from 'react-toastify'
 
-export const fetchGenderStart =  () => {
-    // type: actionTypes.ADMIN_GENDER_START
-    return async(dispatch, getState) => {
-        try {
-            dispatch({
-                type: actionTypes.FETCH_GENDER_START
-            })
-            let res = await getAllCodeService("GENDER");
-            if (res && res.errCode === 0) {
-                dispatch(fetchGenderSuccess(res.users.reverse()))
-            } else {
-                dispatch(fetchGenderFailed());
-            }
-        } catch (e) {
-            dispatch(fetchGenderFailed());
-            console.log(e)
-        }
-    }
-}
 
 export const fetchPositionStart =  () => {
     return async(dispatch, getState) => {
@@ -80,7 +61,25 @@ export const saveUserSuccess = () => ({
 export const saveUserFailed = () => ({
     type: actionTypes.CREATE_USER_FAILED
 })
-
+export const fetchGenderStart =  () => {
+    // type: actionTypes.ADMIN_GENDER_START
+    return async(dispatch, getState) => {
+        try {
+            dispatch({
+                type: actionTypes.FETCH_GENDER_START
+            })
+            let res = await getAllCodeService("GENDER");
+            if (res && res.errCode === 0) {
+                dispatch(fetchGenderSuccess(res.users.reverse()))
+            } else {
+                dispatch(fetchGenderFailed());
+            }
+        } catch (e) {
+            dispatch(fetchGenderFailed());
+            console.log(e)
+        }
+    }
+}
 export const fetchGenderSuccess = (genderData) => ({
     type: actionTypes.FETCH_GENDER_SUCCESS,
     data: genderData
@@ -249,3 +248,61 @@ export const saveDetailDoctor = (data) => {
         }
     }
 }
+export const fetchAllScheduleTime = () => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllCodeService("TIME");
+            if(res && res.errCode === 0){
+                dispatch({
+                    type: actionTypes.FETCH_ALLCODE_TIME_SUCCESS,
+                    dataTime: res.data
+                })
+            } else {
+                dispatch({
+                    type: actionTypes.FETCH_ALLCODE_TIME_FAILED
+                })
+            }
+        } catch (e) {
+            dispatch({
+                type: actionTypes.FETCH_ALLCODE_TIME_FAILED
+            })
+        }
+    }
+}
+
+export const fetchRequiredDoctorInfor =  () => {
+    // type: actionTypes.ADMIN_GENDER_START
+    return async(dispatch, getState) => {
+        try {
+            dispatch({
+                type: actionTypes.FETCH_REQUIRED_DOCTOR_INFOR_START
+            })
+            let resPrice = await getAllCodeService("PRICE");
+            let resPayment = await getAllCodeService("PAYMENT");
+            let resProvince = await getAllCodeService("PROVINCE");
+            if (resPrice && resPrice.errCode === 0
+                && resPayment && resPayment.errCode === 0
+                && resProvince && resProvince.errCode === 0) {
+                    let data = {
+                        resPrice: resPrice,
+                        resPayment: resPayment,
+                        resProvince: resProvince
+                    }
+                dispatch(fetchRequiredDoctorInforSuccess(data))
+            } else {
+                dispatch(fetchRequiredDoctorInforFailed());
+            }
+        } catch (e) {
+            dispatch(fetchRequiredDoctorInforFailed());
+            console.log(e)
+        }
+    }
+}
+export const fetchRequiredDoctorInforSuccess = (allRequiredData) => ({
+    type: actionTypes.FETCH_REQUIRED_DOCTOR_INFOR_SUCCESS,
+    data: allRequiredData
+})
+
+export const fetchRequiredDoctorInforFailed = () => ({
+    type: actionTypes.FETCH_REQUIRED_DOCTOR_INFOR_FAILED
+})
