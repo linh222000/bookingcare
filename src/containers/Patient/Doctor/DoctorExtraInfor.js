@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import './DoctorExtraInfor.scss'
 import { LANGUAGES } from '../../../utils';
-import { getScheduleDoctorByDate } from '../../../services/userService'
+import { getExtraInforDoctorById } from '../../../services/userService'
 import { all } from 'axios';
+import NumberFormat from 'react-number-format'
 
 class DoctorExtraInfor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isShowDetailInfor: false
+            isShowDetailInfor: false,
+            extraInfor: {}
         }
     }
     async componentDidMount() {
@@ -19,6 +21,14 @@ class DoctorExtraInfor extends Component {
         if (this.props.language !== prevProps.language) {
             
         }
+        if(this.props.doctorIdFromParent !== prevProps.doctorIdFromParent){
+            let res = await getExtraInforDoctorById(this.props.doctorIdFromParent)
+            if(res && res.errCode === 0){
+                this.setState({
+                    extraInfor: res.data
+                })
+            }
+        }
         
     }
     showHideDetaiInfor = (status) => {
@@ -27,17 +37,50 @@ class DoctorExtraInfor extends Component {
         })
     }
     render() {
-        let {isShowDetailInfor} = this.state
+        let {isShowDetailInfor, extraInfor} = this.state
+        let {language} = this.props
         return (
             <div className='doctor-extra-infor-container'>
                 <div className='content-up'>
                     <div className='text-address'>Địa chỉ khám</div>
-                    <div className='name-clinic'>fasdfsadg</div>
-                    <div className='detail-address'>vzxvzxcv</div>
+                    <div className='name-clinic'>
+                        {extraInfor && extraInfor.nameClinic ? extraInfor.nameClinic : ''}
+                    </div>
+                    <div className='detail-address'>
+                        {extraInfor && extraInfor.addressClinic ? extraInfor.addressClinic : ''}
+                    </div>
                 </div>
                 <div className='content-down'>
                     {isShowDetailInfor === false &&
-                        <div className='short-infor'>Giá Khám: 250.000đ. <span onClick={() => this.showHideDetaiInfor(true)}>Xem chi tiết</span></div>                    
+                        <div className='short-infor'>
+                            Giá Khám: 
+                                {extraInfor && extraInfor.priceTypeData && language === LANGUAGES.VI
+                                && 
+                                <NumberFormat 
+                                    className="currency"
+                                    value={extraInfor.priceTypeData.valueVi}
+                                    displayType={'text'}
+                                    thousandSeparator={true}
+                                    suffix={'VND'}
+                                />
+                                }
+                                {extraInfor && extraInfor.priceTypeData && language === LANGUAGES.EN
+                                && 
+                                <NumberFormat
+                                    className="currency"
+                                    value={extraInfor.priceTypeData.valueEn}
+                                    displayType={'text'}
+                                    thousandSeparator={true}
+                                    suffix={'$'}
+                                />
+                                }
+                            <span 
+                                className='detail'
+                                onClick={() => this.showHideDetaiInfor(true)}
+                            >
+                                Xem chi tiết
+                            </span>
+                        </div>                    
                     }
                     {isShowDetailInfor === true &&
                         <>
@@ -45,11 +88,36 @@ class DoctorExtraInfor extends Component {
                             <div className='detail-infor'>
                                 <div className='price'>
                                     <span className='left'>Giá khám</span>
-                                    <span className='right'>250000</span>
+                                    <span className='right'>
+                                        {extraInfor && extraInfor.priceTypeData && language === LANGUAGES.VI
+                                        && 
+                                        <NumberFormat 
+                                            className="currency"
+                                            value={extraInfor.priceTypeData.valueVi}
+                                            displayType={'text'}
+                                            thousandSeparator={true}
+                                            suffix={'VND'}
+                                        />
+                                        }
+                                        {extraInfor && extraInfor.priceTypeData && language === LANGUAGES.EN
+                                        && 
+                                        <NumberFormat
+                                            className="currency"
+                                            value={extraInfor.priceTypeData.valueEn}
+                                            displayType={'text'}
+                                            thousandSeparator={true}
+                                            suffix={'$'}
+                                        />
+                                        }
+                                    </span>
                                 </div>
-                                <div className='note'>uu tien dat lich</div>
+                                <div className='note'>
+                                    {extraInfor && extraInfor.note ? extraInfor.note : ''}
+                                </div>
                             </div>
-                            <div className='payment'>thanh toan bang the hoac tien mat</div>
+                            <div className='payment'>Người bệnh có thể thanh toán bằng:
+                                {extraInfor && extraInfor.paymentTypeData ? extraInfor.paymentTypeData.valueVi : ''}
+                            </div>
                             <div className='hide-price'><span onClick={() => this.showHideDetaiInfor(false)}>Ẩn bảng giá</span></div>
                         </>
                     }

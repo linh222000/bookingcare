@@ -18,8 +18,13 @@
     }
     .content-down {
         .short-infor {
-            cursor: pointer;
-            background-color: rgb(38, 160, 231);
+            .detail {
+                cursor: pointer;
+                background-color: rgb(38, 160, 231);
+            }
+            .currency {
+                margin: 0 5px;
+            }
         }
         .title-price {
             margin-bottom: 10px;
